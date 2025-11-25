@@ -479,6 +479,153 @@ footer .dev-contact i{
 @keyframes ring { 0% { transform: rotate(0deg) scale(1); } 10% { transform: rotate(30deg) scale(1.1); } 20% { transform: rotate(-30deg) scale(1.1); } 30% { transform: rotate(30deg) scale(1.1); } 40% { transform: rotate(-30deg) scale(1.1); } 50% { transform: rotate(0deg) scale(1); } }
 @keyframes popIn { to { transform: scale(1); } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+body{
+    background:var(--bg); /* মূল ফাইলের ব্যাকগ্রাউন্ড কালার ব্যবহার করা হয়েছে */
+    font-family:"Noto Sans Bengali", sans-serif;
+}
+
+/* Modal BG */
+.modal{
+    display:none;
+    position:fixed;
+    left:0; top:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.85); /* মূল ফাইলের সাথে সামঞ্জস্য রেখে পরিবর্তন করা হয়েছে */
+    z-index:10000;
+    padding-top:40px;
+    overflow-y: auto; /* কন্টেন্ট বেশি হলে স্ক্রল করার জন্য */
+    backdrop-filter: blur(5px);
+}
+
+/* Modal Box */
+.modal-content-new{ /* নাম পরিবর্তন করা হয়েছে যেন মূল ফাইলের .modal-content-এর সাথে দ্বন্দ্ব না হয় */
+    width:90%;
+    background:#1a1f2b; /* মূল ফাইলের কার্ড ব্যাকগ্রাউন্ড ব্যবহার করা হয়েছে */
+    margin:50px auto;
+    padding:20px;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.5);
+    animation:fade .3s;
+    max-width:400px;
+    border: 1px solid var(--accent);
+}
+
+/* Animation */
+@keyframes fade{from{opacity:0; transform:scale(0.9)} to{opacity:1; transform:scale(1)}}
+
+.close-new{ /* নাম পরিবর্তন করা হয়েছে */
+    float:right;
+    font-size:28px;
+    cursor:pointer;
+    color:#eaf3ef; /* মূল ফাইলের ফন্ট কালার ব্যবহার করা হয়েছে */
+    transition: color 0.2s;
+}
+.close-new:hover {
+    color: #ff6b6b;
+}
+
+.title-new{ /* নাম পরিবর্তন করা হয়েছে */
+    text-align:center;
+    font-size:22px;
+    color:var(--accent);   /* মূল ফাইলের অ্যাকসেন্ট কালার ব্যবহার করা হয়েছে */
+    margin-bottom:10px;
+    font-weight: 800;
+}
+
+.subText{
+    text-align:center;
+    margin-bottom:15px;
+    color:var(--muted);
+}
+
+/* Product Box */
+.product-box{
+    display:flex;
+    gap:12px;
+    padding:10px;
+    border:1px solid rgba(6, 214, 160, 0.3);
+    background:#232a3d; /* মূল ফাইলের সার্চ বক্স/ট্রাস্ট সেকশন ব্যাকগ্রাউন্ড ব্যবহার করা হয়েছে */
+    border-radius:12px;
+    margin-bottom:15px;
+    align-items:center;
+    color: #eaf3ef;
+}
+.product-box img{
+    width:70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius:10px;
+    border: 1px solid var(--accent);
+}
+.product-box h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+    font-weight: 700;
+}
+.product-box p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.newPrice{
+    color:#FFD700;
+    font-size:18px;
+    font-weight: 900;
+}
+#oldPrice{
+    color: var(--muted);
+    font-size: 14px;
+    margin-right: 8px;
+}
+
+/* Inputs */
+input{
+    width:calc(100% - 24px);
+    padding:12px;
+    font-size:15px;
+    border-radius:10px;
+    border:2px solid #232a3d;
+    margin-bottom:10px;
+    background:#1a1f2b;
+    color: #eaf3ef;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+input:focus{
+    border-color: var(--accent);
+}
+input::placeholder {
+    color: var(--muted);
+}
+
+/* Buttons */
+.submitBtn{
+    width:100%;
+    padding:13px;
+    background:var(--accent);
+    border:none;
+    font-size:18px;
+    color:#0b1020;
+    border-radius:10px;
+    cursor:pointer;
+    margin-top:5px;
+    font-weight: 800;
+    transition: background 0.3s ease;
+}
+.submitBtn:hover{
+    background: #00e0b3;
+}
+
+/* মূল ফাইলের .btn-order স্টাইলটি ব্যবহৃত হবে, তাই .orderBtn দরকার নেই */
+/* .orderBtn{
+    padding:12px 20px;
+    background:#ff8900;
+    color:white;
+    border:none;
+    border-radius:10px;
+    font-size:17px;
+} */
 </style>
 </head>
 <body>
@@ -498,6 +645,31 @@ footer .dev-contact i{
 চেখে দেখুন, একবারেই প্রেমে পড়বেন!😅</div>
 </header>
 
+<div id="orderModal" class="modal">
+    <div class="modal-content-new">
+        <span class="close-new" onclick="closeOrderModal()">&times;</span>
+
+        <h2 class="title-new">অর্ডার কনফার্ম করুন</h2>
+        <p id="selectedText" class="subText"></p>
+
+        <div class="product-box">
+            <img id="productImg" src="" alt="">
+            <div>
+                <h3 id="pName"></h3>
+                <p>
+                    <del id="oldPrice"></del> 
+                    <strong id="newPrice" class="newPrice"></strong>
+                </p>
+            </div>
+        </div>
+
+        <input type="text" id="name" placeholder="আপনার পুরো নাম *" required>
+        <input type="text" id="phone" placeholder="আপনার মোবাইল নাম্বার *" required>
+        <input type="text" id="address" placeholder="আপনার ঠিকানা (জেলা সহ) *" required>
+
+        <button class="submitBtn" onclick="sendOrderWhatsApp()">হোয়াটসঅ্যাপে অর্ডার করুন</button>
+    </div>
+</div>
 <input type="text" id="searchBox" class="search-box" placeholder="" onkeyup="searchProducts(this.value)">
 
 <div style="text-align:center; margin-bottom:15px;">
@@ -591,7 +763,7 @@ footer .dev-contact i{
         <p>আমরা সারা বাংলাদেশে কুরিয়ারের মাধ্যমে হোম ডেলিভারি দিয়ে থাকি। অর্ডারের ২-৩ দিনের মধ্যে আপনার হাতে পৌঁছে যাবে ইনশাআল্লাহ।</p>
       </div>
 
-      <div class="footer-note">
+<div class="footer-note">
         "একবার স্বাদ নিলে, বারবার নিতে হবে - এটাই আমাদের বিশ্বাস!"
       </div>
     </div>
@@ -698,7 +870,7 @@ products.forEach((p, index)=>{
     <div class="img-box"><img src="${p.img}" alt="${p.title}"></div>
     <h4 class="prod-title" title="${p.id} - ${p.title}">${p.title}</h4>
     <div class="price-row"><div class="price">৳${p.price}</div><div class="old">৳${p.old}</div></div>
-    <button class="btn-order" onclick="orderProduct('${p.id}','${p.title}','৳${p.price}','${p.img}')">অর্ডার করুন</button>
+    <button class="btn-order" onclick="openOrderModal('${p.title}','${p.old}','${p.price}','${p.img}')">অর্ডার করুন</button>
   `;
   grid.appendChild(card);
 });
@@ -716,23 +888,62 @@ function searchProducts(query){
   });
 }
 
-// অর্ডার ফাংশন (নাম ছাড়াই শুধু আইডি ও বিবরণ)
-function orderProduct(id, title, price, img){
-    loader.style.display = 'flex';
-    loader.style.opacity = '1';
-
-    setTimeout(()=>{
-        loader.style.opacity = '0';
-        setTimeout(()=>{loader.style.display = 'none';}, 300);
-        
-        const waNumber = '8801856215561';
-        
-        // মেসেজ কাঠামো: নাম ছাড়া শুধু প্রোডাক্টের বিবরণ
-        const message = `আমি এই আচারটি অর্ডার করতে চাই।\n\nপ্রোডাক্ট আইডি: ${id}\nনাম: ${title}\nদাম: ${price}\n\nআমি কি আপনার প্রডাক্ট সম্পর্কে আরও কিছু জানতে পারি?`;
-        
-        window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(message)}`,'_blank');
-    },1200);
+// *** মডাল অর্ডার ফাংশন - নতুন যোগ করা হয়েছে ***
+function openOrderModal(name, oldP, newP, img){
+    // লোডার বন্ধ করুন, কারণ এখন মডাল খুলবে
+    loader.style.display = 'none';
+    
+    document.getElementById("orderModal").style.display = "block";
+    document.getElementById("pName").innerText = name;
+    document.getElementById("oldPrice").innerText = "৳ " + oldP;
+    document.getElementById("newPrice").innerText = "৳ " + newP;
+    document.getElementById("productImg").src = img;
+    document.getElementById("selectedText").innerText =
+        "আপনি এখন " + name + " অর্ডার করছেন।";
 }
+
+function closeOrderModal(){
+    document.getElementById("orderModal").style.display = "none";
+}
+
+function sendOrderWhatsApp(){
+    let name = document.getElementById("name").value;
+    let phone = document.getElementById("phone").value;
+    let address = document.getElementById("address").value;
+    let product = document.getElementById("pName").innerText;
+    let newPrice = document.getElementById("newPrice").innerText;
+    
+    // ফর্ম ভ্যালিডেশন 
+    if (!name || !phone || !address) {
+        alert("দয়া করে আপনার নাম, মোবাইল নাম্বার এবং ঠিকানা দিন।");
+        return;
+    }
+    
+    // হোয়াটসঅ্যাপ নম্বর (মূল ফাইলের নম্বর ব্যবহার করা হলো)
+    const waNumber = '8801856215561';
+
+    let msg =
+        `*বিসমিল্লাহ আচার হাউজ - নতুন অর্ডার*\n\n` +
+        `প্রোডাক্ট: ${product} (${newPrice})\n\n` +
+        `*ক্রেতার বিবরণ:*\n` +
+        `নাম: ${name}\n` +
+        `মোবাইল: ${phone}\n` +
+        `ঠিকানা: ${address}\n\n` +
+        `দয়া করে আমার অর্ডারটি নিশ্চিত করুন।`;
+
+    let url = "https://wa.me/" + waNumber + "?text=" + encodeURIComponent(msg);
+    window.open(url, "_blank");
+    
+    // অর্ডার সফলভাবে পাঠানোর পর মডাল বন্ধ করা
+    closeOrderModal();
+    
+    // ফর্ম রিসেট
+    document.getElementById("name").value = '';
+    document.getElementById("phone").value = '';
+    document.getElementById("address").value = '';
+}
+// *** মডাল অর্ডার ফাংশন শেষ ***
+
 
 // নোটিশ বন্ধ করার ফাংশন
 function hideNotice(id) {
@@ -758,11 +969,16 @@ function closeInfoModal() {
 
 // মডালের বাইরে ক্লিক করলে বন্ধ হবে
 window.onclick = function(event) {
-  const modal = document.getElementById('infoModal');
-  if (event.target == modal) {
-    modal.style.display = 'none';
+  const infoModal = document.getElementById('infoModal');
+  const orderModal = document.getElementById('orderModal'); // নতুন মডাল যোগ
+  
+  if (event.target == infoModal) {
+    infoModal.style.display = 'none';
+  }
+  if (event.target == orderModal) { // নতুন মডাল
+    orderModal.style.display = 'none';
   }
 }
 </script>
 </body>
-</html>
+                                                                                                                </html>
